@@ -6,6 +6,14 @@ function isStringLess(string,strLength){
   return false;
 }
 
+// Строка короче 20 символов
+isStringLess('проверяемая строка', 20); // true
+// Длина строки ровно 18 символов
+isStringLess('проверяемая строка', 18); // true
+// Строка длиннее 10 символов
+isStringLess('проверяемая строка', 10); // false
+
+
 //Функция для проверки, является ли строка палиндромом
 function isPalindrom(string){
   let array = [],
@@ -38,7 +46,13 @@ function isPalindrom(string){
 
 
 // Строка является палиндромом
-// console.log(isPalindrom('Лёша на полке клопа нашёл ')); // true
+isPalindrom('Лёша на полке клопа нашёл '); // true
+// Строка является палиндромом
+isPalindrom('топот'); // true
+// Несмотря на разный регистр, тоже палиндром
+isPalindrom('ДовОд'); // true
+// Это не палиндром
+isPalindrom('Кекс'); // false
 
 //Дополнительно
 //Извлечение цифр от 0 до 9 из строки
@@ -64,4 +78,4 @@ function getNumFromStr(string){
 }
 
 
- console.log(getNumFromStr('-1'));
+getNumFromStr('-1');
