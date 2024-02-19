@@ -64,4 +64,4 @@ function getNumFromStr(string){
 }
 
 
-// console.log(getNumFromStr('-1'));
+ console.log(getNumFromStr('-1'));
