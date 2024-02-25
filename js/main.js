@@ -83,7 +83,7 @@ const createPhoto = () =>{
 //let newPhoto = createPhoto();
 
 //Создадим массив описаний фото
-const photoArray = Array.from({length : 25},createPhoto());
+//const photoArray = Array.from({length : 25},createPhoto());
 
 //Выведем результат в консоль
 //console.table(photoArray);
