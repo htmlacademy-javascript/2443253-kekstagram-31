@@ -1,24 +1,35 @@
 import {createPhotoArray} from './data.js';
 
-//Шаблон фото
+//Шаблон фотографии
 const templatePicture = document.querySelector('#picture')
   .content
   .querySelector('.picture');
-//Массив случайных фото с описанием от пользователей
-const randomUserPhotos = createPhotoArray();
 //Блок для отрисовки
-const drawContainer = document.querySelector('.pictures');
-//Фрагмент для вставки в блок
-const insertFragment = document.createDocumentFragment();
+const drawingContainer = document.querySelector('.pictures');
+
+
+//Создаем массив случайных фото с описанием от пользователей
+const randomUserPhotos = createPhotoArray();
+
 
 // Заполнение новых элементов DOM случайными данными из массива
-randomUserPhotos.forEach((photo)=>{
-  const newPhoto = templatePicture.cloneNode(true);
-  newPhoto.querySelector('.picture__img').src = photo.url;
-  newPhoto.querySelector('.picture__img').alt = photo.description;
-  newPhoto.querySelector('.picture__likes').textContent = photo.likes;
-  newPhoto.querySelector('.picture__comments').textContent = photo.comments.length;
-  insertFragment.append(newPhoto);
-});
-//Вставка фрагмента для отрисовки
-drawContainer.append(insertFragment);
+//@photos {array} - массив фотографий с описаниями
+//return {DOM fragment} - заполненный фрагмент для отрисовки
+const drawPhotos = (photos) =>{
+//Фрагмент для вставки в блок
+  const insertFragment = document.createDocumentFragment();
+
+  photos.forEach((photo)=>{
+    const newPhoto = templatePicture.cloneNode(true);
+    newPhoto.querySelector('.picture__img').src = photo.url;
+    newPhoto.querySelector('.picture__img').alt = photo.description;
+    newPhoto.querySelector('.picture__likes').textContent = photo.likes;
+    newPhoto.querySelector('.picture__comments').textContent = photo.comments.length;
+    insertFragment.append(newPhoto);
+  });
+  //Вставка фрагмента для отрисовки
+  return insertFragment;
+};
+
+
+drawingContainer.append(drawPhotos(randomUserPhotos));
