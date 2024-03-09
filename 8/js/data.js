@@ -70,7 +70,7 @@ const createPhoto = () =>{
       numLikes = getRandomInteger(LIKES_MIN_COUNT,LIKES_MAX_COUNT);
 
     photo.id = id;
-    photo.url = `../photos/${id}.jpg`;
+    photo.url = `photos/${id}.jpg`;
     photo.description = `Это фотография №${id}`;
     photo.likes = numLikes();
     //Создаем список комментариев
