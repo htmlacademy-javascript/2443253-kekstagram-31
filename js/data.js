@@ -31,6 +31,8 @@ const COMMENTS_MAX_COUNT = 30;
 //Минимальное и максимальное количество лайков
 const LIKES_MIN_COUNT = 15;
 const LIKES_MAX_COUNT = 200;
+//Максимальное количество объектов фотографий
+const PHOTOS_MAX_COUNT = 25;
 
 
 //Создание вложенного объекта Comments
@@ -77,4 +79,8 @@ const createPhoto = () =>{
     return photo;
   };
 };
-export {createPhoto};
+
+//Функция создания массива фото с описаниями
+const createPhotoArray = ()=>Array.from({length : PHOTOS_MAX_COUNT},createPhoto());
+export {createPhotoArray};
+
