@@ -20,5 +20,7 @@ const getRandomInteger = (a, b, two = false) => {
     return two ? [randomNum1,randomNum2] : randomNum1;
   };
 };
+const isEscapeKey = (evt) => evt.keyCode === 27;
 
-export {getRandomInteger};
+
+export {getRandomInteger,isEscapeKey};
