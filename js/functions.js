@@ -41,3 +41,4 @@ const checkMeetingInWorktime = (startWork,stopWork,startMeeting,meetingDuration)
 //console.log(
 checkMeetingInWorktime('01:5','5:45','1:50',70);
 //);
+
