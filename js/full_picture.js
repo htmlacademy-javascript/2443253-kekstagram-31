@@ -115,6 +115,7 @@ const drawFullPicture = (evt,photos)=>{
     case 'picture__info': photo = evt.target.previousElementSibling; break;
     case 'picture__likes': photo = evt.target.closest('.picture__info').previousElementSibling; break;
     case 'picture__comments': photo = evt.target.closest('.picture__info').previousElementSibling; break;
+    default: return null;
   }
 
 
