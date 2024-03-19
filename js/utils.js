@@ -23,4 +23,22 @@ const getRandomInteger = (a, b, two = false) => {
 const isEscapeKey = (evt) => evt.keyCode === 27;
 
 
-export {getRandomInteger,isEscapeKey};
+//Определим фугкцию проверки на дубль
+Array.prototype.isUnique = function() {
+  const uniq = [];
+  const result = this.slice(0).every((item, index, arr) => {
+    if (uniq.indexOf(item) > -1) {
+      arr.length = 0;
+      return false;
+    } else {
+      uniq.push(item);
+      return true;
+    }
+  });
+  return result;
+};
+
+//Удалим последний символ строки
+const strDeleteLastSym = (str) => str.substring(0, str.length - 1);
+
+export {getRandomInteger,isEscapeKey,strDeleteLastSym};
