@@ -1,81 +1,44 @@
-// Функция проверки максимальной длины строки
-function isStringLess(string,strLength){
-  if(string.length <= strLength){
-    return true;
-  }
-  return false;
-}
+//Принимает время начала и конца рабочего дня,
+// а также время старта и продолжительность встречи в минутах и возвращает true,
+// если встреча не выходит за рамки рабочего дня, и false, если выходит.
+// @param {startWork} string
+// @param {stopWork} string
+// @param {startMeeting} string
+// @param {meetingDuration} number
+// @return {boolean}
+const checkMeetingInWorktime = (startWork,stopWork,startMeeting,meetingDuration)=>{
+  const startW = startWork.split(':');
+  const stopW = stopWork.split(':');
+  const startM = startMeeting.split(':');
+  let startWorkMin = 0,
+    stopWorkMin = 0,
+    startMeetingMin = 0;
 
-// Строка короче 20 символов
-isStringLess('проверяемая строка', 20); // true
-// Длина строки ровно 18 символов
-isStringLess('проверяемая строка', 18); // true
-// Строка длиннее 10 символов
-isStringLess('проверяемая строка', 10); // false
-
-
-//Функция для проверки, является ли строка палиндромом
-function isPalindrom(string){
-  let array = [],
-    reverseArray = [];
-
-  string = string.toLowerCase();
-  //Удалим пробелы в конце
-  string = string.trimEnd();
-  //Преобразуем строку в массив
-  array = string.split('');
-  //Удалим все остальные пробелы
-  for(let i = 0;i < array.length;i++) {
-    if(array[i] === ' '){
-      for(let j = i;j < array.length;j++){
-        array[j] = array[j + 1];
-      }
-      array.pop();
-    }
-  }
-  // Перевернем массив
-  reverseArray = array.toReversed();
-  // Проверим на палиндром
-  for(let i = 0; i < array.length;i++){
-    if (array[i] !== reverseArray[i]){
+  if (startW[1] < 59 && stopW[1] < 59 && startM[1] < 59){
+    //Сразу переведем в минуты от начала суток
+    startWorkMin = +startW[0] * 60 + (+startW[1]);
+    stopWorkMin = +stopW[0] * 60 + (+stopW[1]);
+    startMeetingMin = +startM[0] * 60 + (+startM[1]);
+    //Конец рабочего дня позже начала
+    if (stopWorkMin < startWorkMin){
       return false;
     }
-  }
-  return true;
-}
 
-
-// Строка является палиндромом
-isPalindrom('Лёша на полке клопа нашёл '); // true
-// Строка является палиндромом
-isPalindrom('топот'); // true
-// Несмотря на разный регистр, тоже палиндром
-isPalindrom('ДовОд'); // true
-// Это не палиндром
-isPalindrom('Кекс'); // false
-
-//Дополнительно
-//Извлечение цифр от 0 до 9 из строки
-function getNumFromStr(string){
-  //Если целое число
-  if((Number.isInteger(string))){
-    return string;
-  } else
-  //Если строка
-    if(typeof(string) === 'string') {
-      // const array = string.split('')
-      let number = '';
-      for(let i = 0;i < string.length;i++) {
-        if(string[i] >= '0' && string[i] <= '9'){
-          number += string[i];
-        }
-
-      }
-      return number === '' ? NaN : +number;
+    //Проверяем
+    if (startMeetingMin < startWorkMin){
+      return false;
+    } else if((startMeetingMin + meetingDuration) > stopWorkMin){
+      return false;
     } else {
-      return 'Параметр не является целым или строкой';
+      return true;
     }
-}
+  } else {
+    return false;
+  }
 
 
-getNumFromStr('-1');
+};
+//console.log(
+checkMeetingInWorktime('01:5','5:45','1:50',70);
+//);
+
