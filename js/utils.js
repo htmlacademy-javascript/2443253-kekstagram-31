@@ -41,4 +41,13 @@ Array.prototype.isUnique = function() {
 //Удалим последний символ строки
 const strDeleteLastSym = (str) => str.substring(0, str.length - 1);
 
+//Функция для события нажатия на клавишу Esc
+// const onDocumentKeydown = (evt,makeThis) => {
+//   if (isEscapeKey(evt)) {
+//     evt.preventDefault();
+//     makeThis();
+//   }
+// };
+
+
 export {getRandomInteger,isEscapeKey,strDeleteLastSym};

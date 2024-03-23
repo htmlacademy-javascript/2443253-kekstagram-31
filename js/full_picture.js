@@ -51,6 +51,7 @@ const refreshShownCount = () =>{
 function closeBigPicture() {
   bigPicture.classList.add('hidden');
   //Очистим события по документу
+  //document.removeEventListener('keydown',onDocumentKeydown(Event,closeBigPicture));
   document.removeEventListener('keydown',onDocumentKeydown);
   //Вернем скролл контейнера
   document.querySelector('body').classList.remove('modal-open');
@@ -88,7 +89,7 @@ function OpenBigPicture() {
   bigPicture.classList.remove('hidden');
 
   //Сразу навесим закрытие по Esc
-  document.addEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', onDocumentKeydown,false);
   //И событие по клику на закрытие
   bigPictureCancel.addEventListener('click',()=>{
     closeBigPicture();
