@@ -1,5 +1,6 @@
 /* eslint-disable no-empty */
 import {isEscapeKey,strDeleteLastSym} from './utils.js';
+import {showPost} from './user-modal.js';
 
 //Константы для наложения эффектов на изображения (CSS стили)
 const GRAYSCALE = 'grayscale';
@@ -52,14 +53,34 @@ let chrome = 0,
 //Радиокнопки эффектов
 const effects = document.querySelectorAll('input[name="effect"]');
 
-
-//--------------------------------------------------------------Описания функций для валидации---------------------------
 //Создание объекта валидации
 const pristine = new Pristine(formEdit,{
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextClass: 'img-upload__field-wrapper--error',
 });
+
+//Привсети все данные формы в исходное состояние
+const initFormData = () =>{
+  chrome = 0;
+  sepia = 0;
+  marvin = 0;
+  phobos = 0;
+  heat = 1;
+
+  selectedEffect = '';
+  scaleValue.value = '100%';
+  newImageLoad.value = '';
+  textHashtags.value = '';
+  comment.value = '';
+  refreshPreview(100);
+  effects[0].checked = true;
+  switchEffect(effects[0]);
+  pristine.validate();
+
+};
+
+//--------------------------------------------------------------Описания функций для валидации---------------------------
 
 
 //Проверка длины хэш тэгов и решетки
@@ -137,26 +158,42 @@ pristine.addValidator(textHashtags,validateDubHT,'Хэштэги повторя�
 //Длина комментария
 pristine.addValidator(comment,validateLengthComment,'Длина комментария не должна превышать 140 символов');
 
-//Валидация формы
-formEdit.addEventListener('submit', (evt) => {
-
-
-  const isValid = pristine.validate();
-
-  if (isValid) {
-  //   отправить форму
-  } else {
-    //   не отправлять форму
+//Валидация и отправка формы-----------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+const setUserFormSubmit = (onSuccess) => {
+  formEdit.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
-  }
-});
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      //   отправить форму
+      const formData = new FormData(evt.target);
+      fetch(
+        'https://31.javascript.htmlacadem.pro/kekstagram',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      ).then((state) => {
+        if (state.ok){
+          onSuccess(true);
+        }
+      }
+      )
+        .catch(() => showPost('error'));
+    } else {
+    //   не отправлять форму
+
+    }
+  });
+};
 
 //Функция для события нажатия на клавишу Esc
 const onDocumentKeydown2 = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeNewPicture();
+    closeNewPicture(false);
   }
 };
 
@@ -169,12 +206,13 @@ const newImgLoad = () =>{
 };
 //Событие по клику на закрытие
 newPictureClose.addEventListener('click',()=>{
-  closeNewPicture();
+  closeNewPicture(false);
 });
 
 
 //Функция - что делаем при открытии нового изображения
 function openNewPicture() {
+
   //Покажем форму
   formOverlay.classList.remove('hidden');
 
@@ -194,25 +232,32 @@ function openNewPicture() {
 }
 
 //Функция - что делаем при закрытии большого изображения
-function closeNewPicture() {
+//post - true изображение отправлено
+function closeNewPicture(post) {
   //Скроем форму
   formOverlay.classList.add('hidden');
   //Очистим события по документу
   document.removeEventListener('keydown',onDocumentKeydown2);
   //Вернем скролл контейнера
   document.querySelector('body').classList.remove('modal-open');
+  //Очистим данные формы
+  if (post){
+    initFormData();
+    //Покажем сообщение об успешной отправке
+    showPost('success');
+  }
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 // Масштаб
 // -------------------------------------------------------------------------------------------------------------------------------------------------
-const refreshPreview = (currentValue) =>{
+function refreshPreview (currentValue) {
 
   scaleValue.value = `${currentValue}%`;
 
   imgPreview.style.cssText = `transform: scale(${currentValue / 100})`;
 
-};
+}
 
 buttonImgSmaller.addEventListener('click',()=>{
   let currentValue = +strDeleteLastSym(scaleValue.value);
@@ -264,43 +309,46 @@ const updateSliderChromeSepia = (value = 0,minValue = 0,maxValue = 1,stepValue =
   });
 };
 
-
+// выберем эффект, переключим slider и наложим эффект c текущим значением соотв. слайдера
+function switchEffect (effect){
+  switch (effect.id){
+    case 'effect-none':
+      effectLevelSlider.classList.add('hidden');
+      imgPreview.style.cssText = 'filter: none'; break;
+    case 'effect-chrome':
+      selectedEffect = GRAYSCALE;
+      updateSliderChromeSepia(chrome,0,1,0.1);
+      updateLevelValueImgStyle(chrome,selectedEffect);
+      break;
+    case 'effect-sepia':
+      selectedEffect = SEPIA;
+      updateSliderChromeSepia(sepia,0,1,0.1);
+      updateLevelValueImgStyle(sepia,selectedEffect);
+      break;
+    case 'effect-marvin':
+      selectedEffect = INVERT;
+      updateSliderChromeSepia(marvin,0,100,1);
+      updateLevelValueImgStyle(marvin,selectedEffect,'%');
+      break;
+    case 'effect-phobos':
+      selectedEffect = BLUR;
+      updateSliderChromeSepia(phobos,0,3,0.1);
+      updateLevelValueImgStyle(phobos,selectedEffect,'px');
+      break;
+    case 'effect-heat':
+      selectedEffect = BRIGHTNESS;
+      updateSliderChromeSepia(heat,1,3,0.1);
+      updateLevelValueImgStyle(heat,selectedEffect);
+      break;
+  }
+}
 //Слушатели на радиокнопки эффектов
 effects.forEach((effect) => {
   effect.addEventListener('click', () => {
     if (effect.checked){
       // выберем эффект, переключим slider и наложим эффект c текущим значением соотв. слайдера
-      switch (effect.id){
-        case 'effect-none':
-          effectLevelSlider.classList.add('hidden');
-          imgPreview.style.cssText = 'filter: none'; break;
-        case 'effect-chrome':
-          selectedEffect = GRAYSCALE;
-          updateSliderChromeSepia(chrome,0,1,0.1);
-          updateLevelValueImgStyle(chrome,selectedEffect);
-          break;
-        case 'effect-sepia':
-          selectedEffect = SEPIA;
-          updateSliderChromeSepia(sepia,0,1,0.1);
-          updateLevelValueImgStyle(sepia,selectedEffect);
-          break;
-        case 'effect-marvin':
-          selectedEffect = INVERT;
-          updateSliderChromeSepia(marvin,0,100,1);
-          updateLevelValueImgStyle(marvin,selectedEffect,'%');
-          break;
-        case 'effect-phobos':
-          selectedEffect = BLUR;
-          updateSliderChromeSepia(phobos,0,3,0.1);
-          updateLevelValueImgStyle(phobos,selectedEffect,'px');
-          break;
-        case 'effect-heat':
-          selectedEffect = BRIGHTNESS;
-          updateSliderChromeSepia(heat,1,3,0.1);
-          updateLevelValueImgStyle(heat,selectedEffect);
-          break;
+      switchEffect(effect);
 
-      }
     }
   });
 });
@@ -323,4 +371,4 @@ effectLevelSlider.noUiSlider.on('update', () => {
   imgPreview.style.filter = `${selectedEffect}(${effectLevelValue.value}${unit})`;
 });
 
-export {newImgLoad};
+export {newImgLoad,setUserFormSubmit,closeNewPicture};
