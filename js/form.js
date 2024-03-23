@@ -1,19 +1,23 @@
 /* eslint-disable no-empty */
 import {isEscapeKey,strDeleteLastSym} from './utils.js';
 
-
+//Константы для наложения эффектов на изображения (CSS стили)
+const GRAYSCALE = 'grayscale';
+const SEPIA = 'sepia';
+const INVERT = 'invert';
+const BLUR = 'blur';
+const BRIGHTNESS = 'brightness';
 //--------------------------------------------------------------Переменные валидации-----------------------------------------------
 //Форма для валидации
-const formEdit = document.querySelector('.img-upload__overlay');
+const formEdit = document.querySelector('.img-upload__form');
+const formOverlay = document.querySelector('.img-upload__overlay');
 //Строка с хэштэгами
 const textHashtags = document.querySelector('.text__hashtags');
 //Поле с комментарием
 const comment = document.querySelector('.text__description');
 
 //Регулярные выражения для проверки хэштега
-//const heshTegReg = /^#[a-zа-яё0-9]{1,19}$/i;
-//const RegLengthHT = /^#.{1,19}$/i;
-const RegSymbolsHT = /^[a-zа-яё0-9]+$/i;
+const regularHT = /^[a-zа-яё0-9]+$/i;
 
 //Объект с формой
 const newImageLoad = document.querySelector('.img-upload__input');
@@ -27,7 +31,7 @@ const newPictureClose = formEdit.querySelector('.img-upload__cancel');
 
 
 //Превью изображения
-const imgPreview = document.querySelector('.img-upload__preview');
+const imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
 
 // --------------------------------------------------------------Переменные для масштаба------------------------------------------------
 const buttonImgSmaller = document.querySelector('.scale__control--smaller');
@@ -42,7 +46,7 @@ let chrome = 0,
   sepia = 0,
   marvin = 0,
   phobos = 0,
-  znoi = 1,
+  heat = 1,
   selectedEffect = '';
 
 //Радиокнопки эффектов
@@ -85,9 +89,9 @@ const validateSymbolsHT = (value) =>{
       if ((heshTag === '#') || (heshTag === '')){
         return false;
       } else if (heshTag.length === 1){
-        return !RegSymbolsHT.test(heshTag.substring(0));
+        return !regularHT.test(heshTag.substring(0));
       } else {
-        return !RegSymbolsHT.test(heshTag.substring(1));
+        return !regularHT.test(heshTag.substring(1));
       }
     });
   }
@@ -156,12 +160,13 @@ const onDocumentKeydown2 = (evt) => {
   }
 };
 
-
-//Событие файл с изображением выбран - покажем форму редактирования
-newImageLoad.addEventListener('change',()=>{
-  openNewPicture();
-});
-
+//Экспортируемая функция для инициализации события при выборе файла изображения
+const newImgLoad = () =>{
+  //Событие файл с изображением выбран - покажем форму редактирования
+  newImageLoad.addEventListener('change',()=>{
+    openNewPicture();
+  });
+};
 //Событие по клику на закрытие
 newPictureClose.addEventListener('click',()=>{
   closeNewPicture();
@@ -171,7 +176,7 @@ newPictureClose.addEventListener('click',()=>{
 //Функция - что делаем при открытии нового изображения
 function openNewPicture() {
   //Покажем форму
-  formEdit.classList.remove('hidden');
+  formOverlay.classList.remove('hidden');
 
   //Изначально слайдер невидим
   effectLevelSlider.classList.add('hidden');
@@ -185,19 +190,17 @@ function openNewPicture() {
   textHashtags.addEventListener('keydown', (evt) => evt.stopPropagation());
   comment.addEventListener('keydown', (evt) => evt.stopPropagation());
 
+
 }
 
 //Функция - что делаем при закрытии большого изображения
 function closeNewPicture() {
   //Скроем форму
-  formEdit.classList.add('hidden');
+  formOverlay.classList.add('hidden');
   //Очистим события по документу
   document.removeEventListener('keydown',onDocumentKeydown2);
   //Вернем скролл контейнера
   document.querySelector('body').classList.remove('modal-open');
-  //Очистим значение выбранного файла изображения
-  newImageLoad.value = '';
-
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -228,7 +231,7 @@ buttonImgBigger.addEventListener('click',()=>{
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 // Наложения эффектов
 // -------------------------------------------------------------------------------------------------------------------------------------------------
-
+//Создадим слайдер с параметрами по умолчанию
 noUiSlider.create(effectLevelSlider, {
   range: {
     min: 0,
@@ -249,14 +252,14 @@ const updateLevelValueImgStyle = (value,effect,unit = '') =>{
 };
 
 //update слайдера для Sepia и Chrome одинаковый
-const updateSliderChromeSepia = (value) => {
+const updateSliderChromeSepia = (value = 0,minValue = 0,maxValue = 1,stepValue = 0.1) => {
   effectLevelSlider.noUiSlider.updateOptions({
     range: {
-      min: 0,
-      max: 1,
+      min: minValue,
+      max: maxValue,
     },
     start: value,
-    step:0.1,
+    step:stepValue,
     connect: 'lower'
   });
 };
@@ -272,53 +275,29 @@ effects.forEach((effect) => {
           effectLevelSlider.classList.add('hidden');
           imgPreview.style.cssText = 'filter: none'; break;
         case 'effect-chrome':
-          selectedEffect = 'grayscale';
-          updateSliderChromeSepia(chrome);
+          selectedEffect = GRAYSCALE;
+          updateSliderChromeSepia(chrome,0,1,0.1);
           updateLevelValueImgStyle(chrome,selectedEffect);
           break;
         case 'effect-sepia':
-          selectedEffect = 'sepia';
-          updateSliderChromeSepia(sepia);
+          selectedEffect = SEPIA;
+          updateSliderChromeSepia(sepia,0,1,0.1);
           updateLevelValueImgStyle(sepia,selectedEffect);
           break;
         case 'effect-marvin':
-          selectedEffect = 'invert';
-          effectLevelSlider.noUiSlider.updateOptions({
-            range: {
-              min: 0,
-              max: 100,
-            },
-            start: marvin,
-            step:1,
-            connect: 'lower'
-          });
+          selectedEffect = INVERT;
+          updateSliderChromeSepia(marvin,0,100,1);
           updateLevelValueImgStyle(marvin,selectedEffect,'%');
           break;
         case 'effect-phobos':
-          selectedEffect = 'blur';
-          effectLevelSlider.noUiSlider.updateOptions({
-            range: {
-              min: 0,
-              max: 3,
-            },
-            start: phobos,
-            step:0.1,
-            connect: 'lower'
-          });
+          selectedEffect = BLUR;
+          updateSliderChromeSepia(phobos,0,3,0.1);
           updateLevelValueImgStyle(phobos,selectedEffect,'px');
           break;
         case 'effect-heat':
-          selectedEffect = 'brightness';
-          effectLevelSlider.noUiSlider.updateOptions({
-            range: {
-              min: 1,
-              max: 3,
-            },
-            start: znoi,
-            step:0.1,
-            connect: 'lower'
-          });
-          updateLevelValueImgStyle(znoi,selectedEffect);
+          selectedEffect = BRIGHTNESS;
+          updateSliderChromeSepia(heat,1,3,0.1);
+          updateLevelValueImgStyle(heat,selectedEffect);
           break;
 
       }
@@ -333,14 +312,15 @@ effectLevelSlider.noUiSlider.on('update', () => {
 
   //обновим текущее значение фильтра
   switch (selectedEffect){
-    case 'grayscale': chrome = +effectLevelValue.value;break;
-    case 'sepia': sepia = +effectLevelValue.value;break;
-    case 'invert': marvin = +effectLevelValue.value; unit = '%';break;
-    case 'blur': phobos = +effectLevelValue.value; unit = 'px';break;
-    case 'brightness': znoi = +effectLevelValue.value;break;
+    case GRAYSCALE: chrome = +effectLevelValue.value;break;
+    case SEPIA: sepia = +effectLevelValue.value;break;
+    case INVERT: marvin = +effectLevelValue.value; unit = '%';break;
+    case BLUR: phobos = +effectLevelValue.value; unit = 'px';break;
+    case BRIGHTNESS: heat = +effectLevelValue.value;break;
 
   }
   //отрисуем
   imgPreview.style.filter = `${selectedEffect}(${effectLevelValue.value}${unit})`;
 });
 
+export {newImgLoad};

@@ -32,29 +32,24 @@ const drawPhotos = (photos) =>{
 
     insertFragment.append(newPhoto);
 
-    // //Сразу навесим событие клика на аватарку
-    // newPhoto.addEventListener('click',()=>{
-    //   //Перенесем данные и покажем большое изображение
-    //   drawFullPicture(photo);
-    //   //Уберем скролл контейнера
-    //   document.querySelector('body').classList.add('modal-open');
-    // });
-
   });
   //Вставка фрагмента для отрисовки
   return insertFragment;
 };
 drawingContainer.append(drawPhotos(randomUserPhotos));
 
-//События - попытка навесить события на контейнер с дальнейшей проверкой по matches
-// Но в evt события клика передается только img, а не весь DOM объект фото
 
-drawingContainer.addEventListener('click',(evt) =>{
+const userImgLoad = () =>{
+//Навесим события на всеь контейнер с аватарками
+  drawingContainer.addEventListener('click',(evt) =>{
 
-  drawFullPicture(evt,randomUserPhotos);
+    drawFullPicture(evt,randomUserPhotos);
 
-  //Уберем скролл контейнера позади открывшейся картинки
-  document.querySelector('body').classList.add('modal-open');
+    //Уберем скролл контейнера позади открывшейся картинки
+    document.querySelector('body').classList.add('modal-open');
 
 
-});
+  });
+};
+
+export{userImgLoad};
