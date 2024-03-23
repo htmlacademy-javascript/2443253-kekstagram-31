@@ -1,4 +1,4 @@
-import {createPhotoArray} from './data.js';
+//import {createPhotoArray} from './data.js';
 
 import {drawFullPicture} from './full_picture.js';
 
@@ -11,7 +11,7 @@ const drawingContainer = document.querySelector('.pictures');
 
 
 //Создаем массив случайных фото с описанием от пользователей
-const randomUserPhotos = createPhotoArray();
+//const randomUserPhotos = createPhotoArray();
 
 
 // Заполнение новых элементов DOM случайными данными из массива
@@ -21,8 +21,8 @@ const drawPhotos = (photos) =>{
 //Фрагмент для вставки в блок
   const insertFragment = document.createDocumentFragment();
 
-  photos.forEach((photo,index)=>{
 
+  photos.forEach((photo,index)=>{
     const newPhoto = templatePicture.cloneNode(true);
     newPhoto.querySelector('.picture__img').src = photo.url;
     newPhoto.querySelector('.picture__img').alt = photo.description;
@@ -37,14 +37,15 @@ const drawPhotos = (photos) =>{
   return insertFragment;
 };
 
-drawingContainer.append(drawPhotos(randomUserPhotos));
 
 //Отрисовка большого изображения по событию клика
-const userImgLoad = () =>{
-//Навесим события на всеь контейнер с аватарками
+const userImgLoad = (photos) =>{
+  //drawingContainer.append(drawPhotos(randomUserPhotos));
+  drawingContainer.append(drawPhotos(photos));
+  //Навесим события на всеь контейнер с аватарками
   drawingContainer.addEventListener('click',(evt) =>{
 
-    drawFullPicture(evt,randomUserPhotos);
+    drawFullPicture(evt,photos);
 
     //Уберем скролл контейнера позади открывшейся картинки
     document.querySelector('body').classList.add('modal-open');
