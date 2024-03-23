@@ -36,9 +36,10 @@ const drawPhotos = (photos) =>{
   //Вставка фрагмента для отрисовки
   return insertFragment;
 };
+
 drawingContainer.append(drawPhotos(randomUserPhotos));
 
-
+//Отрисовка большого изображения по событию клика
 const userImgLoad = () =>{
 //Навесим события на всеь контейнер с аватарками
   drawingContainer.addEventListener('click',(evt) =>{

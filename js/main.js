@@ -5,3 +5,4 @@ import { newImgLoad } from './form.js';
 newImgLoad();
 //Загрузка нового изображения для редактирования (по  событию клика на аватарку)
 userImgLoad();
+
