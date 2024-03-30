@@ -1,4 +1,8 @@
-//import {createPhotoArray} from './data.js';
+//----------------------------------------------------------------------------------------
+//В данном модуле реализована отрисовка аватарок пользовательских изображений
+//на главной странице после загрузки пользовательских данных
+//----------------------------------------------------------------------------------------
+
 
 import {drawFullPicture} from './full_picture.js';
 
@@ -42,7 +46,7 @@ const drawPhotos = (photos) =>{
 const userImgLoad = (photos) =>{
   //drawingContainer.append(drawPhotos(randomUserPhotos));
   drawingContainer.append(drawPhotos(photos));
-  //Навесим события на всеь контейнер с аватарками
+  //Навесим события на веcь контейнер с аватарками
   drawingContainer.addEventListener('click',(evt) =>{
 
     drawFullPicture(evt,photos);
