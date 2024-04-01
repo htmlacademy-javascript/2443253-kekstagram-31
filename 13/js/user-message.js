@@ -24,17 +24,21 @@ const templateErrorPost = document.querySelector('#error')
 //Показать сообщение об ошибке загрузки
 const showGetError = () =>{
   const error = templateErrorGet.cloneNode(true);
-  document.body.appendChild(error);
+  document.body.append(error);
   setTimeout(() => {
-    document.body.removeChild(error);
+    document.body.error.remove();
   }, 5000);
 };
 
-const closePostResult = () => {
-  document.body.removeChild(messageBlock);
-  document.removeEventListener('keydown', onDocumentKeydown(closePostResult));
+const messageHandler = onDocumentKeydown(closePostResult);
 
-};
+function closePostResult(){
+  messageBlock.remove();
+  document.body.removeEventListener('keydown', messageHandler);
+
+}
+
+
 //Показать сообщение при успешной отправке или ошибке отправки
 const showPostResult = (state) =>{
 
@@ -42,17 +46,17 @@ const showPostResult = (state) =>{
     case 'success': messageBlock = templateSuccessPost.cloneNode(true); break;
     case 'error': messageBlock = templateErrorPost.cloneNode(true); break;
   }
-  document.body.appendChild(messageBlock);
+  document.body.append(messageBlock);
   //Сразу навесим закрытие по Esc и кнопке
-  document.addEventListener('keydown', onDocumentKeydown(closePostResult));
-  //messageBlock.addEventListener('keydown', (evt) => evt.stopPropagation());
+  document.addEventListener('keydown', messageHandler);
+  //window.addEventListener('keydown', (evt) => evt.stopPropagation());
   //Клик на кнопке
   messageBlock.querySelector('div').querySelector('button').addEventListener('click',() =>
-    document.body.removeChild(messageBlock));
+    messageBlock.remove());
 
   //Клик вне окна
   document.addEventListener('click', (evt)=>{
-    if (!messageBlock.querySelector('div').classList.contains(evt.target.className)){
+    if ((evt.target.className === 'success') || (evt.target.className === 'error')) {
       closePostResult();
     }
 
