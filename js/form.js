@@ -50,24 +50,26 @@ const buttonImgBigger = document.querySelector('.scale__control--bigger');
 // --------------------------------------------------------------Переменные для наложения эффектов------------------------------------------------
 const effectLevelValue = document.querySelector('.effect-level__value');
 const effectLevelSlider = document.querySelector('.effect-level__slider');
-let chrome = 0,
-  sepia = 0,
-  marvin = 0,
-  phobos = 0,
-  heat = 1,
+let chrome = 1,
+  sepia = 1,
+  marvin = 100,
+  phobos = 3,
+  heat = 3,
   selectedEffect = '';
 
 //Радиокнопки эффектов
 const effects = document.querySelectorAll('input[name="effect"]');
 
 
+const formHandler = onDocumentKeydown(closeNewPicture);
+
 //Привести все данные формы в исходное состояние
 const initFormData = (open = true) =>{
-  chrome = 0;
-  sepia = 0;
-  marvin = 0;
-  phobos = 0;
-  heat = 1;
+  chrome = 1;
+  sepia = 1;
+  marvin = 100;
+  phobos = 3;
+  heat = 3;
 
   selectedEffect = NONE;
   //масштаб картики
@@ -109,7 +111,7 @@ function openNewPicture(imageLoaded = true) {
     //Изначально слайдер невидим
     effectLevelSlider.classList.add('hidden');
     //Сразу навесим закрытие по Esc
-    document.addEventListener('keydown', onDocumentKeydown(closeNewPicture));
+    document.addEventListener('keydown', formHandler);
 
     //заблокируем скролл контейнера
     document.querySelector('body').classList.add('modal-open');
@@ -123,7 +125,7 @@ function closeNewPicture(post = false) {
   //Скроем форму
   formOverlay.classList.add('hidden');
   //Очистим события по документу
-  document.removeEventListener('keydown',onDocumentKeydown(closeNewPicture));
+  document.removeEventListener('keydown',formHandler);
   //Вернем скролл контейнера
   document.querySelector('body').classList.remove('modal-open');
   //Очистим данные формы
@@ -184,7 +186,7 @@ const updateLevelValueImgStyle = (value,effect,unit = '') =>{
 };
 
 //Обновить параметры слайдера
-const updateSliderChromeSepia = (value = 0,minValue = 0,maxValue = 1,stepValue = 0.1) => {
+const updateSlider = (value = 0,minValue = 0,maxValue = 1,stepValue = 0.1) => {
   effectLevelSlider.noUiSlider.updateOptions({
     range: {
       min: minValue,
@@ -206,27 +208,27 @@ function switchEffect (effect){
       break;
     case 'effect-chrome':
       selectedEffect = GRAYSCALE;
-      updateSliderChromeSepia(chrome,0,1,0.1);
+      updateSlider(chrome,0,1,0.1);
       updateLevelValueImgStyle(chrome,selectedEffect);
       break;
     case 'effect-sepia':
       selectedEffect = SEPIA;
-      updateSliderChromeSepia(sepia,0,1,0.1);
+      updateSlider(sepia,0,1,0.1);
       updateLevelValueImgStyle(sepia,selectedEffect);
       break;
     case 'effect-marvin':
       selectedEffect = INVERT;
-      updateSliderChromeSepia(marvin,0,100,1);
+      updateSlider(marvin,0,100,1);
       updateLevelValueImgStyle(marvin,selectedEffect,'%');
       break;
     case 'effect-phobos':
       selectedEffect = BLUR;
-      updateSliderChromeSepia(phobos,0,3,0.1);
+      updateSlider(phobos,0,3,0.1);
       updateLevelValueImgStyle(phobos,selectedEffect,'px');
       break;
     case 'effect-heat':
       selectedEffect = BRIGHTNESS;
-      updateSliderChromeSepia(heat,1,3,0.1);
+      updateSlider(heat,1,3,0.1);
       updateLevelValueImgStyle(heat,selectedEffect);
       break;
   }

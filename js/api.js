@@ -2,7 +2,7 @@
 //В данном модуле реализована отправка и получение данных с сервера
 //---------------------------------------------------------------------------------------------
 const GET_DATA_SOURCE = 'https://31.javascript.htmlacademy.pro/kekstagram/data';
-const SEND_DATA_SOURCE = 'https://31.javascript.htmlacademy.pro/kekstagram';
+const SEND_DATA_SOURCE = 'https://31.javascript.htmlacademy.pro/kekstagra';
 //Максимальное количество загружаемых фото
 const PHOTOS_MAX_COUNT = 25;
 

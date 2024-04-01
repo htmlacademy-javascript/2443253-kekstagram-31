@@ -28,6 +28,8 @@ const socialShownCountComm = bigPicture.querySelector('.social__comment-shown-co
 //кнопка загрузки дополнительных комментариев
 const socialCommLoader = document.querySelector('.comments-loader');
 
+const bigPictureHandler = onDocumentKeydown(closeBigPicture);
+
 //Функция - обновим счетчик комментариев
 const refreshShownCount = () =>{
 
@@ -41,11 +43,13 @@ const refreshShownCount = () =>{
 
 };
 
+
+
 //Функция - что делаем при закрытии большого изображения
 function closeBigPicture() {
   bigPicture.classList.add('hidden');
   //Очистим события по документу
-  document.removeEventListener('keydown',onDocumentKeydown(closeBigPicture));
+  document.removeEventListener('keydown',bigPictureHandler);
   //Вернем скролл контейнера
   document.querySelector('body').classList.remove('modal-open');
   //Вернем кнопку загрузки новых комментариев
@@ -82,7 +86,7 @@ function OpenBigPicture() {
   bigPicture.classList.remove('hidden');
 
   //Сразу навесим закрытие по Esc
-  document.addEventListener('keydown', onDocumentKeydown(closeBigPicture));
+  document.addEventListener('keydown', bigPictureHandler);
   //И событие по клику на закрытие
   bigPictureCancel.addEventListener('click',()=>{
     closeBigPicture();
