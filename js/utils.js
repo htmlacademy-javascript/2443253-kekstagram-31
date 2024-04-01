@@ -1,8 +1,17 @@
+//----------------------------------------------------------------------------------------
+//Модуль со вспомогательными функциями
+//----------------------------------------------------------------------------------------
+
+
 //Функция возвращает одно или два неповторяющихся случайных числа из заданного диапазона
 //  @param {number} a - нижняя граница
 //  @param {number} b - верхняя граница
 //  @param {boolean} two - какое значение вернуть одно число||массив из 2-х чисел. two===true - вернуть массив.
 //  @returns {number||array}
+//Код esc
+const ESC = 27;
+
+
 const getRandomInteger = (a, b, two = false) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -20,7 +29,6 @@ const getRandomInteger = (a, b, two = false) => {
     return two ? [randomNum1,randomNum2] : randomNum1;
   };
 };
-const isEscapeKey = (evt) => evt.keyCode === 27;
 
 
 //Определим фугкцию проверки на дубль
@@ -41,13 +49,14 @@ Array.prototype.isUnique = function() {
 //Удалим последний символ строки
 const strDeleteLastSym = (str) => str.substring(0, str.length - 1);
 
+const isEscapeKey = (evt) => evt.keyCode === ESC;
 //Функция для события нажатия на клавишу Esc
-// const onDocumentKeydown = (evt,makeThis) => {
-//   if (isEscapeKey(evt)) {
-//     evt.preventDefault();
-//     makeThis();
-//   }
-// };
+const onDocumentKeydown = (makeThis) => (evt) =>{
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    makeThis();
+  }
+};
 
 
-export {getRandomInteger,isEscapeKey,strDeleteLastSym};
+export {getRandomInteger,isEscapeKey,strDeleteLastSym,onDocumentKeydown};

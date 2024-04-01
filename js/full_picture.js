@@ -1,4 +1,8 @@
-import {isEscapeKey} from './utils.js';
+//-------------------------------------------------------------------------------------
+//В данном модуле реализована работа с пользовательским изображением после его открытия
+//из аватарки. Загрузка всех данных (описание, лайки, комментарии...) и их просмотр
+//-------------------------------------------------------------------------------------
+import {onDocumentKeydown} from './utils.js';
 
 
 //количество добавляемых комментариев
@@ -24,15 +28,7 @@ const socialShownCountComm = bigPicture.querySelector('.social__comment-shown-co
 //кнопка загрузки дополнительных комментариев
 const socialCommLoader = document.querySelector('.comments-loader');
 
-
-//Функция для события нажатия на клавишу Esc
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
-};
-
+const bigPictureHandler = onDocumentKeydown(closeBigPicture);
 
 //Функция - обновим счетчик комментариев
 const refreshShownCount = () =>{
@@ -47,12 +43,12 @@ const refreshShownCount = () =>{
 
 };
 
-//Функция - что делаем при закрытии большого изображения
+
+//функция - что делаем при закрытии большого изображения
 function closeBigPicture() {
   bigPicture.classList.add('hidden');
   //Очистим события по документу
-  //document.removeEventListener('keydown',onDocumentKeydown(Event,closeBigPicture));
-  document.removeEventListener('keydown',onDocumentKeydown);
+  document.removeEventListener('keydown',bigPictureHandler);
   //Вернем скролл контейнера
   document.querySelector('body').classList.remove('modal-open');
   //Вернем кнопку загрузки новых комментариев
@@ -89,7 +85,7 @@ function OpenBigPicture() {
   bigPicture.classList.remove('hidden');
 
   //Сразу навесим закрытие по Esc
-  document.addEventListener('keydown', onDocumentKeydown,false);
+  document.addEventListener('keydown', bigPictureHandler);
   //И событие по клику на закрытие
   bigPictureCancel.addEventListener('click',()=>{
     closeBigPicture();

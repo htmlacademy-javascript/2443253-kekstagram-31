@@ -1,27 +1,16 @@
 import {userImgLoad} from './popup.js';
-import {newImgLoad,setUserFormSubmit,closeNewPicture} from './form.js';
-import {showErrorGet} from './user-modal.js';
+import './form.js';
+import {newImgLoad,setUserFormSubmit} from './form.js';
+import {showGetError} from './user-message.js';
+import {getData} from './api.js';
 
-const PHOTOS_MAX_COUNT = 25;
+//Получение данных с сервера
+getData(userImgLoad,showGetError);
 
-fetch('https://31.javascript.htmlacademy.pro/kekstagram/data')
-  .then((response) => {
-    if (response.ok) {
-      return response;
-    }
-    throw new Error(`${response.status} — ${response.statusText}`);
-  })
-  .then((response) => response.json())
-  .then((photos) => {
-    //console.log(photos);
-    userImgLoad(photos.slice(0,PHOTOS_MAX_COUNT));
-  })
-  .catch(() => showErrorGet());
+//Создать событие отправки данных формы
+setUserFormSubmit();
 
-
-//Событие закрытия формы загрузки
-setUserFormSubmit(closeNewPicture);
-
-//Загрузка нового изображения для редактирования (по  событию открытия нового файла)
+//Создать событие загрузки нового изображения для редактирования
+//при открытия нового файла
 newImgLoad();
 
