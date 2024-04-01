@@ -44,8 +44,7 @@ const refreshShownCount = () =>{
 };
 
 
-
-//Функция - что делаем при закрытии большого изображения
+//функция - что делаем при закрытии большого изображения
 function closeBigPicture() {
   bigPicture.classList.add('hidden');
   //Очистим события по документу
