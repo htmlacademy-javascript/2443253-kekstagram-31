@@ -225,7 +225,7 @@ const updateSlider = (value = 0,minValue = 0,maxValue = 1,stepValue = 0.1) => {
 
 // выберем эффект, переключим slider и наложим эффект c текущим значением соотв. слайдера
 function switchEffect (effect){
-  //initSliderData();
+  initSliderData();
   switch (effect.id){
     case 'effect-none':
       effectLevelSlider.classList.add('hidden');
