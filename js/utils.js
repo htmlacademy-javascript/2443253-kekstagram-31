@@ -2,16 +2,14 @@
 //Модуль со вспомогательными функциями
 //----------------------------------------------------------------------------------------
 
+//Код esc
+const ESC = 27;
 
 //Функция возвращает одно или два неповторяющихся случайных числа из заданного диапазона
 //  @param {number} a - нижняя граница
 //  @param {number} b - верхняя граница
 //  @param {boolean} two - какое значение вернуть одно число||массив из 2-х чисел. two===true - вернуть массив.
 //  @returns {number||array}
-//Код esc
-const ESC = 27;
-
-
 const getRandomInteger = (a, b, two = false) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -30,6 +28,27 @@ const getRandomInteger = (a, b, two = false) => {
   };
 };
 
+//возвращает неповторяющиеся индексы элементов из массива @array
+//возвращает -1 если количество запрашиваемых индексов превышает длину массива
+const getRandomIntegerFromArray = (array) => {
+  const randomIndex = getRandomInteger(0,array.length - 1);
+  const randomArray = [];
+
+  return () => {
+    let newRandomIndex = randomIndex();
+    if (array.length > randomArray.length){
+      while(randomArray.includes(newRandomIndex)){
+        newRandomIndex = randomIndex();
+      }
+      randomArray.push(newRandomIndex);
+      return newRandomIndex;
+    } else{
+      return -1;
+    }
+
+  };
+
+};
 
 //Определим фугкцию проверки на дубль
 Array.prototype.isUnique = function() {
@@ -47,9 +66,11 @@ Array.prototype.isUnique = function() {
 };
 
 //Удалим последний символ строки
-const strDeleteLastSym = (str) => str.substring(0, str.length - 1);
+const deleteLastSym = (str) => str.substring(0, str.length - 1);
 
+//Клавиша ESC
 const isEscapeKey = (evt) => evt.keyCode === ESC;
+
 //Функция для события нажатия на клавишу Esc
 const onDocumentKeydown = (makeThis) => (evt) =>{
   if (isEscapeKey(evt)) {
@@ -58,5 +79,14 @@ const onDocumentKeydown = (makeThis) => (evt) =>{
   }
 };
 
+//Функция устранение дребезга
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
 
-export {getRandomInteger,isEscapeKey,strDeleteLastSym,onDocumentKeydown};
+
+export {getRandomInteger,isEscapeKey,deleteLastSym,onDocumentKeydown,getRandomIntegerFromArray,debounce};
