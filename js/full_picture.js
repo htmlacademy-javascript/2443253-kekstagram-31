@@ -81,7 +81,7 @@ const insertSocialComments = () =>{
 
 
 //Функция - что делаем при открытии большого изображения
-function OpenBigPicture() {
+function openBigPicture() {
   bigPicture.classList.remove('hidden');
 
   //Сразу навесим закрытие по Esc
@@ -134,7 +134,7 @@ const drawFullPicture = (evt,photos)=>{
   //Вставим комментарии
   insertSocialComments();
   //Отрисуем большое изображение
-  OpenBigPicture();
+  openBigPicture();
 };
 
 export {drawFullPicture};

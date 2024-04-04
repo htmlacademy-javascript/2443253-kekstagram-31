@@ -69,6 +69,7 @@ const validate5HT = (value) =>{
 //Проверка повторения хэштэгов
 const validateDubHT = (value) =>{
   let check = true;
+  value = value.toLowerCase();
   if (value !== ''){
     let arrayHeshTags = value.split(' ');
     arrayHeshTags = arrayHeshTags.filter((hashTag) => hashTag.trim() !== '');

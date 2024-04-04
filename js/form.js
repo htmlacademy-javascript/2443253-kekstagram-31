@@ -2,12 +2,10 @@
 //В данном модуле осуществляется работа с формой при открытии нового изображения
 //Открытие формы, масштабирование изображения, эффекты, проверка и закрытие формы
 //-----------------------------------------------------------------------------------------
-import {onDocumentKeydown,strDeleteLastSym} from './utils.js';
+import {onDocumentKeydown,deleteLastSym} from './utils.js';
 import {showPostResult} from './user-message.js';
 import {createPristine,clearPristine} from './validate.js';
 import {sendData} from './api.js';
-
-//import noUiSlider from '../vendor/nouislider/nouislider.js';
 
 //Константы для наложения эффектов на изображения (CSS стили)
 const NONE = '';
@@ -16,6 +14,8 @@ const SEPIA = 'sepia';
 const INVERT = 'invert';
 const BLUR = 'blur';
 const BRIGHTNESS = 'brightness';
+
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
@@ -33,6 +33,9 @@ let pristine;
 
 //Объект с формой
 const newImageLoad = document.querySelector('.img-upload__input');
+//Поле выбора изображения
+const fileUploadField = document.querySelector('#upload-file');
+
 
 //Кнопка закрытия нового изображения
 const newPictureClose = document.querySelector('.img-upload__cancel');
@@ -50,6 +53,7 @@ const buttonImgBigger = document.querySelector('.scale__control--bigger');
 // --------------------------------------------------------------Переменные для наложения эффектов------------------------------------------------
 const effectLevelValue = document.querySelector('.effect-level__value');
 const effectLevelSlider = document.querySelector('.effect-level__slider');
+const sliderContainer = document.querySelector('.img-upload__effect-level');
 let chrome = 1,
   sepia = 1,
   marvin = 100,
@@ -63,14 +67,17 @@ const effects = document.querySelectorAll('input[name="effect"]');
 
 const formHandler = onDocumentKeydown(closeNewPicture);
 
-//Привести все данные формы в исходное состояние
-const initFormData = (open = true) =>{
+const initSliderData = () => {
   chrome = 1;
   sepia = 1;
   marvin = 100;
   phobos = 3;
   heat = 3;
+};
 
+//Привести все данные формы в исходное состояние
+const initFormData = (open = true) =>{
+  initSliderData();
   selectedEffect = NONE;
   //масштаб картики
   scaleValue.value = '100%';
@@ -86,10 +93,15 @@ const initFormData = (open = true) =>{
 };
 
 //инициализации события при выборе файла изображения
-//экспортируемая функция
-const newImgLoad = () =>{
+const loadNewImg = () =>{
   //Событие файл с изображением выбран - покажем форму редактирования
   newImageLoad.addEventListener('change',()=>{
+    const file = fileUploadField.files[0];
+    const fileName = file.name.toLowerCase();
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+    if (matches) {
+      imgPreview.src = URL.createObjectURL(file);
+    }
     openNewPicture(newImageLoad.value);
   });
 };
@@ -104,7 +116,7 @@ newPictureClose.addEventListener('click',()=>{
 function openNewPicture(imageLoaded = true) {
   if(imageLoaded) {
     pristine = createPristine(formEdit);
-    initFormData();
+    initFormData(true);
     //Покажем форму
     formOverlay.classList.remove('hidden');
 
@@ -133,33 +145,44 @@ function closeNewPicture(post = false) {
     //Покажем сообщение об успешной отправке
     showPostResult('success');
   }
-  initFormData(true);
+  initFormData(false);
 
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
 // Масштаб
 // -------------------------------------------------------------------------------------------------------------------------------------------------
+//Вернуть текущий эффект
+const getCurrentEffect = () => {
+  for(let i = 0; i < effects.length; i++){
+    if (effects[i].checked){
+    // выберем включенный эффект
+      return effects[i];
+    }
+  }
+};
+
+//Обновить масштаб и текущий эффект
 function refreshPreview (currentValue) {
-
   scaleValue.value = `${currentValue}%`;
-
   imgPreview.style.cssText = `transform: scale(${currentValue / 100})`;
-
+  switchEffect(getCurrentEffect());
 }
 
 buttonImgSmaller.addEventListener('click',()=>{
-  let currentValue = +strDeleteLastSym(scaleValue.value);
+  let currentValue = +deleteLastSym(scaleValue.value);
   currentValue = currentValue >= 50 ? currentValue - 25 : currentValue;
+  switchEffect(selectedEffect);
   refreshPreview(currentValue);
+
 
 });
 
 buttonImgBigger.addEventListener('click',()=>{
-  let currentValue = +strDeleteLastSym(scaleValue.value);
+  let currentValue = +deleteLastSym(scaleValue.value);
   currentValue = currentValue <= 75 ? currentValue + 25 : currentValue;
+  switchEffect(selectedEffect);
   refreshPreview(currentValue);
-
 });
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -180,6 +203,7 @@ noUiSlider.create(effectLevelSlider, {
 //Обновить значение и эффект картинки при смене слайдера
 const updateLevelValueImgStyle = (value,effect,unit = '') =>{
   effectLevelSlider.classList.remove('hidden');
+  sliderContainer.classList.remove('hidden');
   effectLevelValue.value = effect;
   effectLevelSlider.noUiSlider.set(value);
   imgPreview.style.filter = `${effect}(${effectLevelValue.value}${unit})`;
@@ -198,16 +222,20 @@ const updateSlider = (value = 0,minValue = 0,maxValue = 1,stepValue = 0.1) => {
   });
 };
 
+
 // выберем эффект, переключим slider и наложим эффект c текущим значением соотв. слайдера
 function switchEffect (effect){
+  initSliderData();
   switch (effect.id){
     case 'effect-none':
       effectLevelSlider.classList.add('hidden');
+      sliderContainer.classList.add('hidden');
       selectedEffect = NONE;
       imgPreview.style.filter = 'none';
       break;
     case 'effect-chrome':
       selectedEffect = GRAYSCALE;
+
       updateSlider(chrome,0,1,0.1);
       updateLevelValueImgStyle(chrome,selectedEffect);
       break;
@@ -292,4 +320,4 @@ const setUserFormSubmit = () => {
 };
 
 
-export {newImgLoad,setUserFormSubmit,closeNewPicture};
+export {loadNewImg,setUserFormSubmit,closeNewPicture};
