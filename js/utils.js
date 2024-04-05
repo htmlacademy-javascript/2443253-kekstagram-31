@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------------------
-//Модуль со вспомогательными функциями
-//----------------------------------------------------------------------------------------
-
 //Код esc
 const ESC = 27;
 
@@ -88,5 +84,20 @@ const debounce = (callback, timeoutDelay) => {
   };
 };
 
+//Уберем нули в конце дробной части числа-строки
+const removeLastZero = (num) =>{
+  let i = num.length - 1;
+  if(num.includes('.')){
+    while('0.'.includes(num[i])){
+      num = deleteLastSym(num);
+      if(!num.includes('.')) {
+        break;
+      }
+      i--;
+    }
+  }
+  return num;
+};
 
-export {getRandomInteger,isEscapeKey,deleteLastSym,onDocumentKeydown,getRandomIntegerFromArray,debounce};
+
+export {getRandomInteger,isEscapeKey,deleteLastSym,onDocumentKeydown,getRandomIntegerFromArray,debounce,removeLastZero};

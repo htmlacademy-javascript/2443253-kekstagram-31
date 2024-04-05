@@ -1,9 +1,3 @@
-//--------------------------------------------------------------------
-//В данном модуле реализована работа с сообщениями
-//об ошибках загрузки и отправки данных на сервер
-//--------------------------------------------------------------------
-
-
 import {onDocumentKeydown} from './utils.js';
 
 //Блок фильтрации
@@ -58,9 +52,9 @@ const showPostResult = (state) =>{
     case 'error': messageBlock = templateErrorPost.cloneNode(true); break;
   }
   document.body.append(messageBlock);
-  //Сразу навесим закрытие по Esc и кнопке
+  //Сразу навесим закрытие по Esc
   document.addEventListener('keydown', messageHandler);
-  window.addEventListener('keydown', (evt) => evt.stopPropagation());
+
   //Клик на кнопке
   messageBlock.querySelector('div').querySelector('button').addEventListener('click',() =>
     messageBlock.remove());
