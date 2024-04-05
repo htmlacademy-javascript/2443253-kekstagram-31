@@ -1,12 +1,5 @@
-//----------------------------------------------------------------------------------------
-//В данном модуле реализована отрисовка аватарок пользовательских изображений
-//на главной странице после загрузки пользовательских данных с сервера
-//Работа с блоком фильтров
-//----------------------------------------------------------------------------------------
-
-
 import {drawFullPicture} from './full_picture.js';
-import {randomizePhotos,sortPhotos} from './filter_foto.js';
+import {randomizePhotos,sortPhotos} from './filter_picture.js';
 import {debounce} from './utils.js';
 
 const RERENDER_DELAY = 500;
