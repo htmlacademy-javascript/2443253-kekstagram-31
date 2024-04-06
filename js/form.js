@@ -1,4 +1,4 @@
-import {onDocumentKeydown,deleteLastSym,removeLastZero} from './utils.js';
+import {onKeydown,deleteLastSym,removeLastZero} from './utils.js';
 import {showPostResult} from './user-message.js';
 import {createPristine,clearPristine} from './validate.js';
 import {sendData} from './api.js';
@@ -73,7 +73,7 @@ const effectPrewiews = document.querySelectorAll('.effects__preview');
 let currentEffectElement = document.querySelector('#effect-none');
 
 
-const formHandler = onDocumentKeydown(closeNewPicture);
+const formHandler = onKeydown(closeNewPicture);
 
 const initSliderData = () => {
   effectParameters[CHROME_NUM].chrome = effectParameters[CHROME_NUM].hiChrome;
@@ -138,7 +138,7 @@ function openNewPicture(imageLoaded = true) {
     formOverlay.classList.remove('hidden');
 
     //Сразу навесим закрытие по Esc
-    document.addEventListener('keydown', formHandler);
+    window.addEventListener('keydown', formHandler);
     //заблокируем скролл контейнера
     document.querySelector('body').classList.add('modal-open');
   }
@@ -151,7 +151,7 @@ function closeNewPicture(post = false) {
   //Скроем форму
   formOverlay.classList.add('hidden');
   //Очистим события по документу
-  document.removeEventListener('keydown',formHandler);
+  window.removeEventListener('keydown',formHandler);
   //Вернем скролл контейнера
   document.querySelector('body').classList.remove('modal-open');
   //Очистим данные формы

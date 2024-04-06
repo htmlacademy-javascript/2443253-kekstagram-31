@@ -1,4 +1,4 @@
-import {onDocumentKeydown} from './utils.js';
+import {onKeydown} from './utils.js';
 
 
 //количество добавляемых комментариев
@@ -24,7 +24,7 @@ const socialShownCountComm = bigPicture.querySelector('.social__comment-shown-co
 //кнопка загрузки дополнительных комментариев
 const socialCommLoader = document.querySelector('.comments-loader');
 
-const bigPictureHandler = onDocumentKeydown(closeBigPicture);
+const bigPictureHandler = onKeydown(closeBigPicture);
 
 //Функция - обновим счетчик комментариев
 const refreshShownCount = () =>{

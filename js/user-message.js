@@ -1,4 +1,4 @@
-import {onDocumentKeydown} from './utils.js';
+import {isEscapeKey} from './utils.js';
 
 //Блок фильтрации
 const filterBlock = document.querySelector('.img-filters');
@@ -35,11 +35,17 @@ const showGetError = () =>{
   }, 5000);
 };
 
-const messageHandler = onDocumentKeydown(closePostResult);
+const messageHandler = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.stopPropagation();
+    closePostResult();
+  }
+};
+
 
 function closePostResult(){
   messageBlock.remove();
-  document.body.removeEventListener('keydown', messageHandler);
+  document.removeEventListener('keydown', messageHandler);
 
 }
 

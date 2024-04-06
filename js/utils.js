@@ -68,7 +68,7 @@ const deleteLastSym = (str) => str.substring(0, str.length - 1);
 const isEscapeKey = (evt) => evt.keyCode === ESC;
 
 //Функция для события нажатия на клавишу Esc
-const onDocumentKeydown = (makeThis) => (evt) =>{
+const onKeydown = (makeThis) => (evt) =>{
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     makeThis();
@@ -100,4 +100,4 @@ const removeLastZero = (num) =>{
 };
 
 
-export {getRandomInteger,isEscapeKey,deleteLastSym,onDocumentKeydown,getRandomIntegerFromArray,debounce,removeLastZero};
+export {getRandomInteger,isEscapeKey,deleteLastSym,onKeydown,getRandomIntegerFromArray,debounce,removeLastZero};
