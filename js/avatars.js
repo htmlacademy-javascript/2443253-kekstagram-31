@@ -70,7 +70,7 @@ const setFilter = (cb,filterElement) => {
 
 };
 
-//Установка всех фильтров
+//Установка событий для элементов фильтрации
 const setFilters = (photos) =>{
 
   setFilter(debounce(() => reDrawPhotos(photos),RERENDER_DELAY),defaultFilter);
